@@ -50,6 +50,8 @@ call plug#end()
 
 " 讓 neovim 知道 python3 在哪 "
 let g:python3_host_prog=expand('~/anaconda3/bin/python')
+
+
 " Coc-Setting begin "
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
@@ -218,6 +220,33 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
+let g:go_highlight_build_constraints = 1
+let g:go_highlight_extra_types = 1
+let g:go_highlight_fields = 1
+let g:go_highlight_functions = 1
+let g:go_highlight_methods = 1
+let g:go_highlight_operators = 1
+let g:go_highlight_structs = 1
+let g:go_highlight_types = 1
+
 " Coc-Setting end "
 
 " gotags and tagbar Setting "
@@ -299,6 +328,29 @@ set fileformat=unix
 
 set scrolloff=7
 set backspace=indent,eol,start
+
+set exrc " .vimrc in local project dir
+autocmd BufRead,BufNewFile * set signcolumn=yes
+autocmd FileType tagbar,nerdtree set signcolumn=no
+set foldmethod=indent
+set nofoldenable
+set diffopt+=vertical
+
+:augroup numbertoggle
+:  autocmd!
+:  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
+:  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
+:augroup END
+
+"-- TRUE COLOR --
+" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
+if (has('nvim'))
+    let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+endif
+
+if (has("termguicolors") && $TERM_PROGRAM ==# 'iTerm.app')
+  set termguicolors
+endif
 
 " always uses spaces instead of tab characters "
 set expandtab
@@ -386,4 +438,55 @@ endfunction
 autocmd BufEnter * call SyncTree()
 
 " coc config "
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-tsserver',
+  \ 'coc-eslint',
+  \ 'coc-prettier',
+  \ 'coc-json',
+  \ ]
 
+"-- THEMING --
+set cursorline
+"let g:airline_theme='material'
+let g:airline_thene="oneark"
+let g:onedark_theme_style = 'darker'
+hi Normal       ctermbg=NONE guibg=NONE
+hi SignColumn   ctermbg=235 guibg=#262626
+hi LineNr       ctermfg=grey guifg=grey ctermbg=NONE guibg=NONE
+hi CursorLineNr ctermbg=NONE guibg=NONE ctermfg=178 guifg=#d7af00
+
+let g:gitgutter_set_sign_backgrounds = 0
+
+"-- ALE --
+hi clear ALEErrorSign
+hi clear ALEWarningSign
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_sign_error = '‚úò'
+let g:ale_sign_warning = '‚óã'
+hi Error    ctermfg=204 ctermbg=NONE guifg=#ff5f87 guibg=NONE
+hi Warning  ctermfg=178 ctermbg=NONE guifg=#D7AF00 guibg=NONE
+hi ALEError ctermfg=204 guifg=#ff5f87 ctermbg=52 guibg=#5f0000 cterm=undercurl gui=undercurl
+hi link ALEErrorSign    Error
+hi link ALEWarningSign  Warning
+
+let g:ale_linters = {
+            \ 'python': ['pylint'],
+            \ 'javascript': ['eslint'],
+            \ 'go': ['gobuild', 'gofmt'],
+            \ 'rust': ['rls']
+            \}
+let g:ale_fixers = {
+            \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+            \ 'python': ['autopep8'],
+            \ 'javascript': ['eslint'],
+            \ 'go': ['gofmt', 'goimports'],
+            \ 'rust': ['rustfmt']
+            \}
+let g:ale_fix_on_save = 1
+
+"-- Airline --
+let g:airline#extensions#tabline#enabled = 1
+"-- Exuberant Ctags --
+set tags=tags
