@@ -1,0 +1,7 @@
+QtProject/
+configstore/
+fish/
+htop/
+coc/
+/nvim/autoload
+/nvim/vim-plug
