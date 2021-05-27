@@ -45,11 +45,20 @@ Plug 'sirver/ultisnips'
 
 Plug 'jiangmiao/auto-pairs'
 
+" YouCompleteMe "
+Plug 'Valloric/YouCompleteMe'
 " Initialize plugin system
 call plug#end()
 
 " 讓 neovim 知道 python3 在哪 "
-let g:python3_host_prog=expand('~/anaconda3/bin/python')
+let g:python3_host_prog=expand('/Users/b3620859/opt/anaconda3/bin/python3')
+
+"Disable buffer and around source"
+"The minimum settings on deoplete’s side is to enalbe it at the start of Nvim"
+let g:deoplete#enable_at_startup = 1
+call deoplete#custom#option('ignore_sources', {'_': ['around', 'buffer']})
+" maximum candidate window length
+call deoplete#custom#source('_', 'max_menu_width', 80)
 
 
 " Coc-Setting begin "
@@ -446,6 +455,22 @@ let g:coc_global_extensions = [
   \ 'coc-prettier',
   \ 'coc-json',
   \ ]
+
+" Linting "
+let g:ale_linters = {
+    \ 'python': ['pylint'],
+    \ 'vim': ['vint'],
+    \ 'cpp': ['clang'],
+    \ 'c': ['clang']
+    \}
+
+" custom setting for clangformat
+let g:neoformat_cpp_clangformat = {
+    \ 'exe': 'clang-format',
+    \ 'args': ['--style="{IndentWidth: 4}"']
+    \}
+let g:neoformat_enabled_cpp = ['clangformat']
+let g:neoformat_enabled_c = ['clangformat']
 
 "-- THEMING --
 set cursorline
