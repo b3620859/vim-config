@@ -1,67 +1,120 @@
 "source $HOME/.config/nvim/vim-plug/plugins.vim
+"source $HOME/.config/nvim/themes/onedark.vim
+
+
 " Specify a directory for plugins "
+" for vim
+" call plug#begin('~/.vim/plugged')
+" for neovim
+call plug#begin('~/.config/nvim/plugged')
 
-call plug#begin('~/.vim/plugged')
-" Plug 'morhetz/gruvbox'
 Plug 'joshdick/onedark.vim'
+Plug 'itchyny/lightline.vim'
 
-Plug 'mhinz/vim-startify'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-
-" Golang "
-Plug 'fatih/vim-go',{'for':'go', 'do': ':GoUpdateBinaries'}
-
-Plug 'ryanoasis/vim-devicons'
-
-" Fzf "
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
-
-Plug 'easymotion/vim-easymotion'
-
-Plug 'airblade/vim-gitgutter'
-Plug 'ctrlpvim/ctrlp.vim' " fuzzy find files
-Plug 'scrooloose/nerdcommenter'
-
-Plug 'machakann/vim-highlightedyank'
-
-" Tmux "
-Plug 'christoomey/vim-tmux-navigator'
-
-" Nerdtree "
-Plug 'scrooloose/nerdtree'
-Plug 'jistr/vim-nerdtree-tabs'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-
-" Tagbar "
-Plug 'majutsushi/tagbar'
-
-" UI related "
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'sirver/ultisnips'
+Plug 'mhinz/vim-startify'
 
+" git "
+Plug 'airblade/vim-gitgutter'
+Plug 'tpope/vim-fugitive'
+
+" Multiple language support "
+Plug 'sheerun/vim-polyglot'
+
+" Insert or delete brackets, parens, quotes in pair. "
 Plug 'jiangmiao/auto-pairs'
 
+" coc "
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+" fzf "
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'airblade/vim-rooter'
+
+" nerdtree "
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+
+" nerdcommenter 註解工具 "
+Plug 'scrooloose/nerdcommenter'
+
+" File Explorer With Icons "
+Plug 'ryanoasis/vim-devicons'
+
+" UltiSnips "
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
+
+" ale "
+Plug 'dense-analysis/ale'
+
+" multiple cursors "
+Plug 'terryma/vim-multiple-cursors'
+
+" easy motion "
+Plug 'easymotion/vim-easymotion'
+
+" tagbar "
+Plug 'majutsushi/tagbar'
+
 " YouCompleteMe "
-Plug 'Valloric/YouCompleteMe'
-" Initialize plugin system
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 call plug#end()
 
-" 讓 neovim 知道 python3 在哪 "
-let g:python3_host_prog=expand('/Users/b3620859/opt/anaconda3/bin/python3')
+" -- Color Theme Setting -- "
+syntax on
+colorscheme onedark
+set termguicolors
 
-"Disable buffer and around source"
-"The minimum settings on deoplete’s side is to enalbe it at the start of Nvim"
-let g:deoplete#enable_at_startup = 1
-call deoplete#custom#option('ignore_sources', {'_': ['around', 'buffer']})
-" maximum candidate window length
-call deoplete#custom#source('_', 'max_menu_width', 80)
+let g:onedark_color_overrides = {
+\ "black": {"gui": "#2F343F", "cterm": "235", "cterm16": "0" },
+\ "purple": { "gui": "#C678DF", "cterm": "170", "cterm16": "5" }
+\}
 
+" -- Airline -- "
+let g:lightline = {
+      \ 'colorscheme': 'onedark',
+      \ }
+let g:airline_theme='onedark'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
-" Coc-Setting begin "
+" Always show tabs
+set showtabline=2
+
+" -- THEMING -- "
+set t_Co=256
+set cursorline
+hi CursorLine cterm=none ctermbg=33 ctermfg=White
+hi CursorLineNr ctermbg=NONE guibg=NONE ctermfg=178 guifg=#d7af00
+
+let g:onedark_theme_style = 'darker'
+let g:onedark_termcolors=16
+let g:gitgutter_set_sign_backgrounds = 0
+
+" -- Configurations Part -- "
+set encoding=utf-8
+set number relativenumber
+set smartcase
+" We don't need to see things like -- INSERT -- anymore
+set noshowmode
+
+" -- ale config -- "
+map <C-e> <Plug>(ale_next_wrap)
+map <C-r> <Plug>(ale_previous_wrap)
+
+let g:ale_linters = {
+    \ 'python': ['pylint'],
+    \ 'vim': ['vint'],
+    \ 'cpp': ['ccls'],
+    \ 'c': ['ccls']
+    \}
+
+" -- coc config -- "
 
 " Set internal encoding of vim, not needed on neovim, since coc.nvim using some
 " unicode characters in the file autoload/float.vim
@@ -86,7 +139,7 @@ set shortmess+=c
 
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("patch-8.1.1564")
+if has("nvim-0.5.0") || has("patch-8.1.1564")
   " Recently vim can merge signcolumn and number column into one
   set signcolumn=number
 else
@@ -228,290 +281,59 @@ nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
 nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list.
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" -- coc config end -- "
 
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+" -- tagbar config -- "
+let g:SuperTabMappingForward='<s-tab>'
+let g:SuperTabMappingBackward='<tab>'
+nnoremap <silent> <C-K><C-T> :TagbarToggle<CR>
 
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_extra_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_highlight_structs = 1
-let g:go_highlight_types = 1
-
-" Coc-Setting end "
-
-" gotags and tagbar Setting "
-let g:tagbar_type_go = {
-            \ 'ctagstype' : 'go',
-            \ 'kinds'     : [
-            \ 'p:package',
-            \ 'i:imports:1',
-            \ 'c:constants',
-            \ 'v:variables',
-            \ 't:types',
-            \ 'n:interfaces',
-            \ 'w:fields',
-            \ 'e:embedded',
-            \ 'm:methods',
-            \ 'r:constructor',
-            \ 'f:functions'
-            \ ],
-            \ 'sro' : '.',
-            \ 'kind2scope' : {
-            \ 't' : 'ctype',
-            \ 'n' : 'ntype'
-            \ },
-            \ 'scope2kind' : {
-            \ 'ctype' : 't',
-            \ 'ntype' : 'n'
-            \ },
-            \ 'ctagsbin'  : 'gotags',
-            \ 'ctagsargs' : '-sort -silent'
-            \ }
-
-" Go development plugin (vim-go) "
-let g:go_metalinter_command = "golangci-lint"
-let g:go_metalinter_enabled = ['vet', 'errcheck', 'staticcheck', 'gosimple']
-
-" vim-go code navigation Setting "
-let g:go_def_mapping_enabled = 0
-autocmd Filetype go nmap <buffer> gd <Plug>(go-def)
-autocmd Filetype go nmap <buffer> gD <Plug>(go-describe)
-autocmd Filetype go nmap <buffer> gR <Plug>(go-rename)
-autocmd Filetype go nmap <buffer> gr <Plug>(go-referrers)
-
-autocmd Filetype go nmap <buffer> <f4> <Plug>(go-test)
-autocmd Filetype go nmap <buffer> <f5> <Plug>(go-build)
-autocmd Filetype go nmap <buffer> <f6> <Plug>(go-run)
-" https://amikai.github.io/2020/09/03/go_neovim_env/
-" https://github.com/fatih/vim-go-tutorial
-
-
-" Color Theme Setting "
-
-" colorscheme gruvbox
-set background=dark
-colorscheme onedark
-
-let g:onedark_color_overrides = {
-\ "black": {"gui": "#2F343F", "cterm": "235", "cterm16": "0" },
-\ "purple": { "gui": "#C678DF", "cterm": "170", "cterm16": "5" }
-\}
-
-" Easymotion Setting "
-nmap ss <Plug>(easymotiom-s2)
-
-" Configurations Part "
-set encoding=utf-8
-set number relativenumber
-syntax on
-"syntax enable
-set noswapfile
-set cindent
-
-set modeline
-set smarttab
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set autoindent
-set fileformat=unix
-
-set scrolloff=7
-set backspace=indent,eol,start
-
-set exrc " .vimrc in local project dir
-autocmd BufRead,BufNewFile * set signcolumn=yes
-autocmd FileType tagbar,nerdtree set signcolumn=no
-set foldmethod=indent
-set nofoldenable
-set diffopt+=vertical
-
-:augroup numbertoggle
-:  autocmd!
-:  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-:  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-:augroup END
-
-"-- TRUE COLOR --
-" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
-if (has('nvim'))
-    let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-endif
-
-if (has("termguicolors") && $TERM_PROGRAM ==# 'iTerm.app')
-  set termguicolors
-endif
-
-" always uses spaces instead of tab characters "
-set expandtab
-set notermguicolors
-"set termguicolors
-
-" NERDTree Setting "
-inoremap jk <ESC>
-nmap <C-n> :NERDTreeToggle<CR>
-vmap ++ <plug>NERDCommenterToggle
-nmap ++ <plug>NERDCommenterToggle
-"20201112 test
-map <Leader>n <plug>NERDTreeTabsToggle<CR>
-" 關閉NERDTree快捷鍵
-map <leader>t :NERDTreeToggle<CR>
+" -- NERDTree config -- "
+map <C-o> :NERDTreeToggle<CR>
 " 顯示行號
-let NERDTreeShowLineNumbers=1
+"let NERDTreeShowLineNumbers=1
 let NERDTreeAutoCenter=1
 " 是否顯示隱藏檔案
 let NERDTreeShowHidden=1
 " 設定寬度
 let NERDTreeWinSize=30
 " 在終端啟動vim時，共享NERDTree
-let g:nerdtree_tabs_open_on_console_startup=1
+"let g:nerdtree_tabs_open_on_console_startup=1
 " 忽略一下檔案的顯示
-let NERDTreeIgnore=['\.pyc','\~$','\.swp']
+let NERDTreeIgnore=['\~$','\.swp','\.pyc$', '__pycache__','^\.DS_Store$',
+            \ '^tags$', '\.git$[[dir]]', '\.idea$[[dir]]', '\.sass-cache$']
 " 顯示書籤列表
 let NERDTreeShowBookmarks=1
 
-" open NERDTree automatically
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * NERDTree
+let g:NERDTreeMinimalUI = 1
+" 書籤顯示於左側
+"let g:NERDTreeWinPos = 'rightbelow'
+let g:NERDTreeStatusline = ''
 
-let g:NERDTreeGitStatusWithFlags = 1
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-"let g:NERDTreeGitStatusNodeColorization = 1
-"let g:NERDTreeColorMapCustom = {
-    "\ "Staged"    : "#0ee375",
-    "\ "Modified"  : "#d9bf91",
-    "\ "Renamed"   : "#51C9FC",
-    "\ "Untracked" : "#FCE77C",
-    "\ "Unmerged"  : "#FC51E6",
-    "\ "Dirty"     : "#FFBD61",
-    "\ "Clean"     : "#87939A",
-    "\ "Ignored"   : "#808080"
-    "\ }
-let g:NERDTreeIgnore = ['^node_modules$']
+" -- vim-devicons config -- "
+let g:webdevicons_enable = 1
+let g:webdevicons_enable_nerdtree = 1
+let g:webdevicons_enable_unite = 1
+let g:webdevicons_enable_vimfiler = 1
+let g:webdevicons_enable_airline_tabline = 1
+let g:webdevicons_enable_airline_statusline = 1
+let g:webdevicons_enable_ctrlp = 1
+let g:webdevicons_enable_flagship_statusline = 1
+let g:WebDevIconsUnicodeDecorateFileNodes = 1
+let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
+let g:webdevicons_conceal_nerdtree_brackets = 1
+let g:WebDevIconsNerdTreeAfterGlyphPadding = '  '
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+let g:webdevicons_enable_denite = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+let g:DevIconsEnableFoldersOpenClose = 1
+let g:DevIconsEnableFolderPatternMatching = 1
+let g:DevIconsEnableFolderExtensionPatternMatching = 1
+let WebDevIconsUnicodeDecorateFolderNodesExactMatches = 1
 
-" vim-airline "
-" vim-airline
-"let g:airline_theme='base16'
-" vim-prettier
-"let g:prettier#quickfix_enabled = 0
-"let g:prettier#quickfix_auto_focus = 0
-
-" prettier command for Coc "
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
-" run prettier on save
-"let g:prettier#autoformat = 0
-"autocmd BufWritePre *.js,*.jsx,*.mjs,*.ts,*.tsx,*.css,*.less,*.scss,*.json,*.graphql,*.md,*.vue,*.yaml,*.html PrettierAsync
-
-" ctrlp
-let g:ctrlp_user_command = ['.git/', 'git --git-dir=%s/.git ls-files -oc --exclude-standard']
-
-" j/k will move virtual lines (lines that wrap)
-noremap <silent> <expr> j (v:count == 0 ? 'gj' : 'j')
-noremap <silent> <expr> k (v:count == 0 ? 'gk' : 'k')
-
-" sync open file with NERDTree "
-" " Check if NERDTree is open or active
-function! IsNERDTreeOpen()
-  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
-endfunction
-
-" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-" file, and we're not in vimdiff
-function! SyncTree()
-  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
-    NERDTreeFind
-    wincmd p
-  endif
-endfunction
-
-" Highlight currently open buffer in NERDTree
-autocmd BufEnter * call SyncTree()
-
-" coc config "
-let g:coc_global_extensions = [
-  \ 'coc-snippets',
-  \ 'coc-pairs',
-  \ 'coc-tsserver',
-  \ 'coc-eslint',
-  \ 'coc-prettier',
-  \ 'coc-json',
-  \ ]
-
-" Linting "
-let g:ale_linters = {
-    \ 'python': ['pylint'],
-    \ 'vim': ['vint'],
-    \ 'cpp': ['clang'],
-    \ 'c': ['clang']
-    \}
-
-" custom setting for clangformat
-let g:neoformat_cpp_clangformat = {
-    \ 'exe': 'clang-format',
-    \ 'args': ['--style="{IndentWidth: 4}"']
-    \}
-let g:neoformat_enabled_cpp = ['clangformat']
-let g:neoformat_enabled_c = ['clangformat']
-
-"-- THEMING --
-set cursorline
-"let g:airline_theme='material'
-let g:airline_thene="oneark"
-let g:onedark_theme_style = 'darker'
-hi Normal       ctermbg=NONE guibg=NONE
-hi SignColumn   ctermbg=235 guibg=#262626
-hi LineNr       ctermfg=grey guifg=grey ctermbg=NONE guibg=NONE
-hi CursorLineNr ctermbg=NONE guibg=NONE ctermfg=178 guifg=#d7af00
-
-let g:gitgutter_set_sign_backgrounds = 0
-
-"-- ALE --
-hi clear ALEErrorSign
-hi clear ALEWarningSign
-let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
-let g:ale_sign_error = '‚úò'
-let g:ale_sign_warning = '‚óã'
-hi Error    ctermfg=204 ctermbg=NONE guifg=#ff5f87 guibg=NONE
-hi Warning  ctermfg=178 ctermbg=NONE guifg=#D7AF00 guibg=NONE
-hi ALEError ctermfg=204 guifg=#ff5f87 ctermbg=52 guibg=#5f0000 cterm=undercurl gui=undercurl
-hi link ALEErrorSign    Error
-hi link ALEWarningSign  Warning
-
-let g:ale_linters = {
-            \ 'python': ['pylint'],
-            \ 'javascript': ['eslint'],
-            \ 'go': ['gobuild', 'gofmt'],
-            \ 'rust': ['rls']
-            \}
-let g:ale_fixers = {
-            \ '*': ['remove_trailing_lines', 'trim_whitespace'],
-            \ 'python': ['autopep8'],
-            \ 'javascript': ['eslint'],
-            \ 'go': ['gofmt', 'goimports'],
-            \ 'rust': ['rustfmt']
-            \}
-let g:ale_fix_on_save = 1
-
-"-- Airline --
-let g:airline#extensions#tabline#enabled = 1
-"-- Exuberant Ctags --
-set tags=tags
+" -- nerdcommenter config -- "
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+" 註解符號後面多一個空白
+let g:NERDSpaceDelims = 1
+" 按下 ctrl + / 可以進行註解
+map <C-_> <Leader>c<space>
